@@ -49,6 +49,57 @@ namespace SimpleTranslator
 
         private void Train_Click(object sender, EventArgs e)
         {
+            TrainButton.Enabled = false;
+            StopTrainingButton.Enabled = true;
+            label1.Text = DateTime.Now.ToLongTimeString();
+
+            this.PredictButton.Enabled = false;
+            ResultTxtBox.Enabled = false;
+            SrcTxtBox.Enabled = false;
+
+            mainThread = new Thread(new ThreadStart(Train));
+            mainThread.Start();
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+
+            this.TrainButton.Enabled = true; 
+            ss.Load();
+            this.PredictButton.Enabled = true;
+            ResultTxtBox.Enabled = true;
+            SrcTxtBox.Enabled = true;
+        }
+
+        private void Stop_Click(object sender, EventArgs e)
+        {
+
+            if (mainThread != null)
+                mainThread.Abort();
+            ss.Save();
+            this.PredictButton.Enabled = true;
+            ResultTxtBox.Enabled = true;
+            SrcTxtBox.Enabled = true;
+            StopTrainingButton.Enabled = false;
+            TrainButton.Enabled = true;
+        }
+
+        private void Predict_Click(object sender, EventArgs e)
+        {
+            var pred = ss.Predict(SrcTxtBox.Text.ToLower().Trim().Split(' ').ToList());
+            ResultTxtBox.Clear();
+             
+            int i = 0;
+            foreach (var item in pred)
+            {
+                ResultTxtBox.Text += item + " ";
+                 
+                i++;
+            }
+        }
+
+        private void CreateButton_Click(object sender, EventArgs e)
+        {
 
 
             var data_sents_raw1 = File.ReadAllLines("en.txt");
@@ -66,48 +117,7 @@ namespace SimpleTranslator
             ss = new AttentionSeq2Seq(64, 32, 1, input, output, true);
 
             ss.IterationDone += ss_IterationDone;
-            label1.Text = DateTime.Now.ToLongTimeString();
-
-            this.PredictButton.Enabled = false;
-            ResultTxtBox.Enabled = false;
-            SrcTxtBox.Enabled = false;
-
-            mainThread = new Thread(new ThreadStart(Train));
-            mainThread.Start();
-        }
-
-        private void button5_Click(object sender, EventArgs e)
-        {
-
-            ss.Load();
-            this.PredictButton.Enabled = true;
-            ResultTxtBox.Enabled = true;
-            SrcTxtBox.Enabled = true;
-        }
-
-        private void Stop_Click(object sender, EventArgs e)
-        {
-
-            if (mainThread != null)
-                mainThread.Abort();
-            ss.Save();
-            this.PredictButton.Enabled = true;
-            ResultTxtBox.Enabled = true;
-            SrcTxtBox.Enabled = true;
-        }
-
-        private void Predict_Click(object sender, EventArgs e)
-        {
-            var pred = ss.Predict(SrcTxtBox.Text.ToLower().Trim().Split(' ').ToList());
-            ResultTxtBox.Clear();
-             
-            int i = 0;
-            foreach (var item in pred)
-            {
-                ResultTxtBox.Text += item + " ";
-                 
-                i++;
-            }
+            this.TrainButton.Enabled = true; 
         }
     }
 }

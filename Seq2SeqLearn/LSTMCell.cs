@@ -68,15 +68,7 @@ namespace Seq2SeqLearn
 
 
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="input"></param>
-        /// <param name="pH"></param>
-        /// <param name="pC"></param>
-        /// <param name="innerGraph"></param>
-        /// <returns>Hidden State , Cell State</returns>
+          
         public  WeightMatrix Step(WeightMatrix input, ComputeGraph innerGraph)
         {
 
