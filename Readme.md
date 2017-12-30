@@ -1,6 +1,7 @@
 # Seq2SeqLearn
 
 Seq2SeqLearn Library is a sequence to sequence learning library written in c#  .net.
+
 sequence to sequence learning is a general framework that can be used for machine translations, Chabot or any other sequence classifications problems.
 # LSTM
 LSTM neural network like recurrent neural network used to predict the next element in a time series or sequence.
