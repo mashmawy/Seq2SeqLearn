@@ -8,7 +8,7 @@ sequence to sequence learning process contain two main blocks Encoder and Decode
 # Encoder
 Encoder map the input sequence to fixed length vector.
 # Decoder
-which take the encoded vector and predict the output sequence.
+take the encoded vector and predict the output sequence.
 the library uses the idea of automatic differentiation 
 
 
