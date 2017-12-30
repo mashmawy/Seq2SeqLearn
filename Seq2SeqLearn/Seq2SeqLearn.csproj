@@ -54,7 +54,7 @@
     <Compile Include="Optimizer.cs" />
     <Compile Include="Tools\EigenvalueDecomposition.cs" />
     <Compile Include="Tools\Matrix.cs" />
-    <Compile Include="Tools\NNGraph.cs" />
+    <Compile Include="Tools\ComputeGraph.cs" />
     <Compile Include="Tools\RandomGenerator.cs" />
     <Compile Include="Tools\SingularValueDecomposition.cs" />
     <Compile Include="Tools\WeightMatrix.cs" />

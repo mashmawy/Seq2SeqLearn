@@ -13,9 +13,9 @@ using System.Windows.Forms;
 
 namespace SimpleTranslator
 {
-    public partial class Form1 : Form
+    public partial class SimpleTranslator : Form
     {
-        public Form1()
+        public SimpleTranslator()
         {
             InitializeComponent();
         }
@@ -24,26 +24,7 @@ namespace SimpleTranslator
         Thread mainThread;
 
         delegate void ProgressDeleget(CostEventArg e);
-        private void button4_Click(object sender, EventArgs e)
-        {
-
-
-            var data_sents_raw1 = File.ReadAllLines("en.txt");
-            var data_sents_raw2 = File.ReadAllLines("ar.txt");
-
-            List<List<string>> input = new List<List<string>>();
-            List<List<string>> output = new List<List<string>>();
-            for (int i = 0; i < data_sents_raw1.Length; i++)
-            {
-                input.Add(data_sents_raw1[i].ToLower().Trim().Split(' ').ToList());
-                output.Add(data_sents_raw2[i].ToLower().Trim().Split(' ').ToList());
-            }
-
-
-            ss = new AttentionSeq2Seq(64, 32, 1, input, output, true);
-
-            ss.IterationDone += ss_IterationDone;
-        }
+    
 
         void ss_IterationDone(object sender, EventArgs e)
         {
@@ -66,10 +47,30 @@ namespace SimpleTranslator
             ss.Save();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Train_Click(object sender, EventArgs e)
         {
+
+
+            var data_sents_raw1 = File.ReadAllLines("en.txt");
+            var data_sents_raw2 = File.ReadAllLines("ar.txt");
+
+            List<List<string>> input = new List<List<string>>();
+            List<List<string>> output = new List<List<string>>();
+            for (int i = 0; i < data_sents_raw1.Length; i++)
+            {
+                input.Add(data_sents_raw1[i].ToLower().Trim().Split(' ').ToList());
+                output.Add(data_sents_raw2[i].ToLower().Trim().Split(' ').ToList());
+            }
+
+
+            ss = new AttentionSeq2Seq(64, 32, 1, input, output, true);
+
+            ss.IterationDone += ss_IterationDone;
             label1.Text = DateTime.Now.ToLongTimeString();
 
+            this.PredictButton.Enabled = false;
+            ResultTxtBox.Enabled = false;
+            SrcTxtBox.Enabled = false;
 
             mainThread = new Thread(new ThreadStart(Train));
             mainThread.Start();
@@ -79,25 +80,31 @@ namespace SimpleTranslator
         {
 
             ss.Load();
+            this.PredictButton.Enabled = true;
+            ResultTxtBox.Enabled = true;
+            SrcTxtBox.Enabled = true;
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void Stop_Click(object sender, EventArgs e)
         {
 
             if (mainThread != null)
                 mainThread.Abort();
             ss.Save();
+            this.PredictButton.Enabled = true;
+            ResultTxtBox.Enabled = true;
+            SrcTxtBox.Enabled = true;
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void Predict_Click(object sender, EventArgs e)
         {
-            var pred = ss.Predict(textBox3.Text.ToLower().Trim().Split(' ').ToList());
-            textBox4.Clear();
+            var pred = ss.Predict(SrcTxtBox.Text.ToLower().Trim().Split(' ').ToList());
+            ResultTxtBox.Clear();
              
             int i = 0;
             foreach (var item in pred)
             {
-                textBox4.Text += item + " ";
+                ResultTxtBox.Text += item + " ";
                  
                 i++;
             }
